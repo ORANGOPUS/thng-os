@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-brand="aqua" data-accent="violet" data-neutral="gray" data-surface="filled" data-solid="color" data-border="playful" data-transition="all" data-desktop-size="16" data-tablet-size="16" data-mobile-size="16">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,10 @@
 <meta name="description" content="THNG is a free, open-source spatial operating system built on Spatial Desktop. Your apps, streams and games as panels in space — on every screen you own.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Once UI (@once-ui-system/core 2.1.0, MIT) — global tokens + utility styles, vendored -->
+<link rel="stylesheet" href="vendor/once-ui/tokens.css">
+<link rel="stylesheet" href="vendor/once-ui/styles.css">
 <style>
 /* OD-LAYOUT-PRIMITIVES v1 — structure only: display, flex/grid, overflow, wrapping, ratio.
    Put this @layer first; product CSS outside the layer always wins. */
@@ -62,33 +65,61 @@
 }
 /* /OD-LAYOUT-PRIMITIVES v1 */
 
-/* ───────── THNG design tokens (thng-ds-1) ───────── */
+/* ───────── THNG on Once UI (once-ui-core-2.1.0-thng-2) ─────────
+   Palette, spacing, radius, type and motion come from vendor/once-ui/tokens.css,
+   themed by the data-* attributes on <html>. The short names below are THNG's
+   aliases onto Once UI tokens so existing markup keeps working. */
+html:root {
+  --font-heading: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-label: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
 :root {
-  --bg: #070A12;
-  --surface: #0E1422;
-  --surface-2: #141C2E;
-  --line: #24304A;
-  --line-strong: #34446A;
-  --text: #E8ECF5;
-  --muted: #A3AEC4;
-  --accent: #5EE6D0;      /* cyan — primary signal */
-  --accent-ink: #04201B;  /* text on cyan */
-  --violet: #A58BFF;      /* secondary, sparingly */
-  --warn: #FFC46B;
+  /* colour → Once UI semantic tokens */
+  --bg: var(--page-background);
+  --surface: var(--surface-background);
+  --surface-2: var(--neutral-alpha-weak);
+  --line: var(--neutral-alpha-medium);
+  --line-strong: var(--neutral-alpha-strong);
+  --text: var(--neutral-on-background-strong);
+  --text-2: var(--neutral-on-background-medium);
+  --muted: var(--neutral-on-background-weak);
+  --accent: var(--brand-on-background-weak);        /* aqua-700: links, icons, focus */
+  --accent-solid: var(--brand-solid-strong);         /* aqua-500 */
+  --accent-solid-hover: var(--brand-solid-medium);
+  --accent-ink: var(--brand-on-solid-strong);        /* white on aqua-500 ≈ 4.7:1 */
+  --accent-wash: var(--brand-alpha-weak);
+  --accent-edge: var(--brand-alpha-strong);
+  --violet: var(--accent-on-background-weak);
+  --violet-wash: var(--accent-alpha-weak);
+  --violet-edge: var(--accent-alpha-strong);
+  --warn: var(--warning-on-background-weak);
+  --warn-wash: var(--warning-alpha-weak);
+  --warn-edge: var(--warning-alpha-strong);
 
-  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  /* type */
+  --font-display: var(--font-heading);
+  --font-mono: var(--font-code);
+  --fs-xs: var(--font-size-body-s);   /* 14px */
+  --fs-sm: var(--font-size-body-m);   /* 16px */
+  --fs-md: var(--font-size-body-l);   /* 18px */
+  --fs-lg: 1.5rem; --fs-xl: 2rem; --fs-2xl: 3rem;
+  --fs-hero: clamp(2.75rem, 7vw, 5rem);
+  --fw-medium: var(--font-weight-medium);
+  --fw-strong: var(--font-weight-semi);
 
-  --fs-xs: 14px; --fs-sm: 16px; --fs-md: 18px; --fs-lg: 24px; --fs-xl: 32px; --fs-2xl: 48px;
-  --fs-hero: clamp(48px, 9vw, 96px);
+  /* space → Once UI static-space */
+  --s1: var(--static-space-4); --s2: var(--static-space-8); --s3: var(--static-space-16); --s4: var(--static-space-24);
+  --s5: var(--static-space-32); --s6: var(--static-space-48); --s7: var(--static-space-64); --s8: var(--static-space-104);
 
-  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 32px; --s6: 48px; --s7: 64px; --s8: 96px;
-  --r-sm: 6px; --r-md: 12px;
+  /* shape → Once UI radius (data-border="playful") */
+  --r-xs: var(--radius-xs); --r-sm: var(--radius-m); --r-md: var(--radius-l); --r-lg: var(--radius-xl); --r-full: var(--radius-full);
   --maxw: 1200px;
   --header-h: 64px;
 
-  --dur-fast: 150ms; --dur: 240ms; --dur-slow: 400ms;
+  /* motion → Once UI durations; THNG keeps ease-out in / ease-in out */
+  --dur-fast: var(--transition-duration-macro-short); --dur: var(--transition-duration-micro-medium); --dur-slow: var(--transition-duration-micro-long);
   --ease-out: cubic-bezier(.2,.7,.2,1); --ease-in: cubic-bezier(.4,0,1,1);
 }
 
@@ -99,97 +130,115 @@ body {
   font: 400 var(--fs-sm)/1.6 var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
-a { color: var(--accent); text-underline-offset: 3px; }
-a:hover { color: var(--text); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--r-sm); }
+a { color: var(--accent); text-underline-offset: 3px; text-decoration-color: var(--accent-edge); }
+a:hover { color: var(--text); text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--r-xs); }
 .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--s4); }
 @media (max-width: 480px) { .wrap { padding-inline: var(--s3); } }
-.skip { position: absolute; left: var(--s3); top: -64px; background: var(--accent); color: var(--accent-ink); padding: var(--s2) var(--s3); border-radius: var(--r-sm); z-index: 50; }
+.skip { position: absolute; left: var(--s3); top: -64px; background: var(--accent-solid); color: var(--accent-ink); padding: var(--s2) var(--s3); border-radius: var(--r-sm); z-index: 50; }
 .skip:focus { top: var(--s3); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* type */
-h1, h2, h3 { margin: 0; font-weight: 400; }
-.display { font-family: var(--font-display); font-size: var(--fs-hero); line-height: 1; letter-spacing: -0.01em; }
-.display em { font-style: italic; color: var(--accent); }
-.h2 { font-family: var(--font-display); font-size: clamp(36px, 5vw, var(--fs-2xl)); line-height: 1.1; }
-.h3 { font: 600 var(--fs-md)/1.4 var(--font-body); }
+/* type — Once UI heading voice: Geist, tight tracking */
+h1, h2, h3 { margin: 0; font-weight: var(--fw-strong); }
+.display { font-family: var(--font-display); font-size: var(--fs-hero); font-weight: var(--fw-strong); line-height: 1.04; letter-spacing: -0.035em; text-wrap: balance; }
+.display em { font-style: normal; color: var(--accent); }
+.h2 { font-family: var(--font-display); font-size: clamp(2rem, 4.4vw, var(--fs-2xl)); font-weight: var(--fw-strong); line-height: 1.12; letter-spacing: -0.025em; text-wrap: balance; }
+.h3 { font: var(--fw-strong) var(--fs-md)/1.4 var(--font-body); letter-spacing: -0.01em; }
 .lede { font-size: var(--fs-md); color: var(--muted); max-width: 62ch; margin: 0; }
 p { margin: 0; max-width: 68ch; }
-.eyebrow { font: 500 var(--fs-xs)/1.4 var(--font-mono); color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.eyebrow { justify-self: start; align-self: start; display: inline-flex; align-items: center; gap: var(--s2); width: fit-content; max-width: 100%;
+  font: var(--fw-medium) var(--fs-xs)/1.4 var(--font-mono); color: var(--accent); letter-spacing: .02em;
+  padding: var(--s1) var(--s3); border: 1px solid var(--accent-edge); background: var(--accent-wash); border-radius: var(--r-full); }
 .mono { font-family: var(--font-mono); }
 .muted { color: var(--muted); }
 
 /* header */
 .site-head {
   position: sticky; top: 0; z-index: 20; height: var(--header-h);
-  background: rgba(7,10,18,.86); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
 }
 .site-head .wrap { height: 100%; }
-.brand { color: var(--text); text-decoration: none; font: 600 var(--fs-md)/1 var(--font-body); letter-spacing: .14em; }
+.brand { color: var(--text); text-decoration: none; font: var(--fw-strong) var(--fs-md)/1 var(--font-heading); letter-spacing: .12em; }
 .brand:hover { color: var(--text); }
 .brand svg { color: var(--accent); }
-.nav { display: flex; gap: var(--s1); list-style: none; margin: 0; padding: 0; }
+.nav { display: flex; gap: var(--s1); list-style: none; margin: 0; padding: var(--s1); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); }
 .nav a {
-  display: flex; align-items: center; min-height: 44px; padding: 0 var(--s3);
-  color: var(--muted); text-decoration: none; font-size: var(--fs-xs); font-weight: 500; border-radius: var(--r-sm);
+  display: flex; align-items: center; min-height: 40px; padding: 0 var(--s3);
+  color: var(--muted); text-decoration: none; font: var(--fw-medium) var(--fs-xs)/1 var(--font-label); border-radius: var(--r-sm);
   transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
 }
 @media (hover: hover) { .nav a:hover { color: var(--text); background: var(--surface-2); } }
-.nav a[aria-current="page"] { color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); border-radius: 0; }
+.nav a[aria-current="page"] { color: var(--text); background: var(--neutral-alpha-medium); }
 .menu-btn { display: none; }
 .head-cta { margin-left: var(--s2); }
 @media (max-width: 1024px) {
   .menu-btn { display: inline-flex; }
   .head-cta { display: none; }
   .nav {
-    position: fixed; inset: var(--header-h) 0 auto 0; flex-direction: column; gap: 0;
-    background: var(--bg); border-bottom: 1px solid var(--line); padding: var(--s2) var(--s3) var(--s3);
+    position: fixed; inset: var(--header-h) 0 auto 0; flex-direction: column; gap: var(--s1);
+    background: var(--bg); border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: var(--s2) var(--s3) var(--s3);
     opacity: 0; transform: translateY(-8px); pointer-events: none; visibility: hidden;
     transition: opacity var(--dur-fast) var(--ease-in), transform var(--dur-fast) var(--ease-in), visibility 0s linear var(--dur-fast);
   }
   .nav.open { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
-  .nav a { font-size: var(--fs-sm); }
-  .nav a[aria-current="page"] { box-shadow: inset 2px 0 0 var(--accent); }
+  .nav a { font-size: var(--fs-sm); min-height: 44px; }
 }
 
-/* buttons */
+/* buttons — Once UI primary / secondary / tertiary */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
-  min-height: 44px; padding: 0 var(--s4); border-radius: var(--r-sm); border: 1px solid var(--line-strong);
-  background: transparent; color: var(--text); font: 500 var(--fs-sm)/1 var(--font-body); text-decoration: none; cursor: pointer;
+  min-height: 44px; padding: 0 var(--s4); border-radius: var(--r-sm); border: 1px solid var(--line);
+  background: transparent; color: var(--text); font: var(--fw-medium) var(--fs-sm)/1 var(--font-label); text-decoration: none; cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
 }
 .btn:active { transform: translateY(1px); }
-@media (hover: hover) { .btn:hover { border-color: var(--accent); color: var(--text); background: var(--surface-2); } }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-@media (hover: hover) { .btn.primary:hover { background: #8AF0E0; border-color: #8AF0E0; color: var(--accent-ink); } }
+@media (hover: hover) { .btn:hover { border-color: var(--line-strong); color: var(--text); background: var(--surface-2); } }
+.btn.primary { background: var(--accent-solid); border-color: var(--accent-edge); color: var(--accent-ink);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--accent-ink) 22%, transparent), var(--shadow-s); }
+@media (hover: hover) { .btn.primary:hover { background: var(--accent-solid-hover); border-color: var(--accent-edge); color: var(--accent-ink); } }
+.btn.tertiary { border-color: transparent; }
 .btn.icon { padding: 0; width: 44px; }
 .btn[disabled] { opacity: .5; cursor: not-allowed; }
 
 /* routing */
 main { min-height: calc(100vh - var(--header-h)); }
-.page { display: none; padding-block: var(--s7) var(--s8); }
+.page { display: none; padding-block: var(--s7) var(--s8); position: relative; isolation: isolate; }
 .page.active { display: block; animation: enter var(--dur) var(--ease-out); }
 @keyframes enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .page-head { display: grid; gap: var(--s3); margin-bottom: var(--s6); }
 
-/* status badges — shape + text, never colour alone */
-.status { display: inline-flex; align-items: center; gap: var(--s2); font: 500 var(--fs-xs)/1.2 var(--font-mono); white-space: nowrap; padding: var(--s1) var(--s2); border-radius: var(--r-sm); border: 1px solid var(--line); }
+/* Once UI Background: grid + dots + brand glow, masked to the top of each page */
+.page::before {
+  content: ""; position: absolute; z-index: -1; top: 0; left: 0; width: 100%; height: 760px; pointer-events: none;
+  background:
+    radial-gradient(48% 60% at 50% 0%, var(--accent-wash), transparent 70%),
+    radial-gradient(circle, var(--neutral-alpha-medium) 1px, transparent 1.5px) 0 0 / 24px 24px,
+    linear-gradient(var(--neutral-alpha-weak) 1px, transparent 1px) 0 0 / 96px 96px,
+    linear-gradient(90deg, var(--neutral-alpha-weak) 1px, transparent 1px) 0 0 / 96px 96px;
+  -webkit-mask-image: radial-gradient(70% 80% at 50% 0%, #000 30%, transparent 100%);
+          mask-image: radial-gradient(70% 80% at 50% 0%, #000 30%, transparent 100%);
+}
+.page:not([data-route="/"])::before { height: 420px; opacity: .7; }
+
+/* status tags — Once UI Tag, shape + text, never colour alone */
+.status { display: inline-flex; align-items: center; gap: var(--s2); width: fit-content; font: var(--fw-medium) var(--fs-xs)/1.2 var(--font-label); white-space: nowrap; padding: var(--s1) var(--s3); border-radius: var(--r-full); border: 1px solid var(--line); background: var(--surface-2); }
 .status::before { content: ""; width: 8px; height: 8px; flex: none; }
-.status.avail { color: var(--accent); border-color: rgba(94,230,208,.35); }
+.status.avail { color: var(--accent); border-color: var(--accent-edge); background: var(--accent-wash); }
 .status.avail::before { background: var(--accent); border-radius: 50%; }
-.status.planned { color: var(--violet); border-color: rgba(165,139,255,.35); }
+.status.planned { color: var(--violet); border-color: var(--violet-edge); background: var(--violet-wash); }
 .status.planned::before { border: 1.5px solid var(--violet); border-radius: 50%; }
-.status.community { color: var(--warn); border-color: rgba(255,196,107,.35); }
+.status.community { color: var(--warn); border-color: var(--warn-edge); background: var(--warn-wash); }
 .status.community::before { background: var(--warn); transform: rotate(45deg); width: 7px; height: 7px; }
 .status.pending { color: var(--muted); }
 .status.pending::before { border: 1.5px dashed var(--muted); border-radius: 2px; }
 
-/* panels */
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s4); }
+/* panels — Once UI Card */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s4); box-shadow: var(--shadow-xs); }
 .panel.pad-lg { padding: var(--s5); }
+a.panel { transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out); }
+@media (hover: hover) { a.panel:hover { border-color: var(--line-strong); } }
 .hair { border: 0; border-top: 1px solid var(--line); margin: var(--s6) 0; }
 
 /* ── HERO / spatial figure ── */
@@ -198,34 +247,34 @@ main { min-height: calc(100vh - var(--header-h)); }
 .hero-copy { display: grid; gap: var(--s4); }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: var(--s3); }
 .space {
-  position: relative; aspect-ratio: 5 / 4; border-radius: var(--r-md); overflow: hidden;
-  border: 1px solid var(--line); background:
-    radial-gradient(60% 50% at 50% 42%, rgba(94,230,208,.10), transparent 70%),
-    radial-gradient(40% 35% at 78% 20%, rgba(165,139,255,.10), transparent 70%),
+  position: relative; aspect-ratio: 5 / 4; border-radius: var(--r-lg); overflow: hidden;
+  border: 1px solid var(--line); box-shadow: var(--shadow-l); background:
+    radial-gradient(60% 50% at 50% 42%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%),
+    radial-gradient(40% 35% at 78% 20%, color-mix(in srgb, var(--violet) 12%, transparent), transparent 70%),
     var(--bg);
   perspective: 900px;
 }
 .space .stars { position: absolute; inset: 0; background-image:
-  radial-gradient(1px 1px at 12% 18%, #cfd8ea 50%, transparent 51%),
-  radial-gradient(1px 1px at 32% 72%, #cfd8ea 50%, transparent 51%),
-  radial-gradient(1px 1px at 58% 12%, #cfd8ea 50%, transparent 51%),
-  radial-gradient(1.5px 1.5px at 84% 64%, #cfd8ea 50%, transparent 51%),
-  radial-gradient(1px 1px at 70% 88%, #cfd8ea 50%, transparent 51%),
-  radial-gradient(1px 1px at 92% 30%, #cfd8ea 50%, transparent 51%),
-  radial-gradient(1px 1px at 6% 56%, #cfd8ea 50%, transparent 51%),
-  radial-gradient(1.5px 1.5px at 44% 40%, #cfd8ea 50%, transparent 51%);
+  radial-gradient(1px 1px at 12% 18%, var(--text-2) 50%, transparent 51%),
+  radial-gradient(1px 1px at 32% 72%, var(--text-2) 50%, transparent 51%),
+  radial-gradient(1px 1px at 58% 12%, var(--text-2) 50%, transparent 51%),
+  radial-gradient(1.5px 1.5px at 84% 64%, var(--text-2) 50%, transparent 51%),
+  radial-gradient(1px 1px at 70% 88%, var(--text-2) 50%, transparent 51%),
+  radial-gradient(1px 1px at 92% 30%, var(--text-2) 50%, transparent 51%),
+  radial-gradient(1px 1px at 6% 56%, var(--text-2) 50%, transparent 51%),
+  radial-gradient(1.5px 1.5px at 44% 40%, var(--text-2) 50%, transparent 51%);
   opacity: .55; }
 .space .floor { position: absolute; left: 50%; bottom: -18%; width: 130%; aspect-ratio: 1; transform: translateX(-50%) rotateX(72deg);
-  border-radius: 50%; background: repeating-radial-gradient(circle, transparent 0 22px, rgba(94,230,208,.22) 22px 23px),
-  conic-gradient(from 0deg, transparent 0 344deg, rgba(94,230,208,.35) 360deg); }
+  border-radius: 50%; background: repeating-radial-gradient(circle, transparent 0 22px, color-mix(in srgb, var(--accent) 22%, transparent) 22px 23px),
+  conic-gradient(from 0deg, transparent 0 344deg, color-mix(in srgb, var(--accent) 35%, transparent) 360deg); }
 .space .core { position: absolute; left: 50%; top: 40%; width: 18%; aspect-ratio: 1; transform: translate(-50%,-50%); border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #c9fff5, var(--accent) 35%, rgba(94,230,208,.0) 72%);
-  box-shadow: 0 0 60px rgba(94,230,208,.35); }
-.space .ring { position: absolute; left: 50%; top: 40%; aspect-ratio: 1; border-radius: 50%; border: 1px dashed rgba(94,230,208,.45); transform: translate(-50%,-50%) rotateX(70deg); }
-.space .ring.r1 { width: 32%; } .space .ring.r2 { width: 46%; border-color: rgba(165,139,255,.4); }
-.pnl { position: absolute; top: 24%; width: 26%; aspect-ratio: 16 / 10; border: 1px solid rgba(94,230,208,.5); border-radius: 6px;
-  background: rgba(14,20,34,.88); padding: 6px; display: grid; grid-template-rows: auto 1fr; gap: 4px; }
-.pnl b { display: block; font: 500 10px/1.2 var(--font-mono); color: var(--accent); letter-spacing: .06em; }
+  background: radial-gradient(circle at 40% 35%, var(--brand-on-background-medium), var(--accent) 35%, transparent 72%);
+  box-shadow: 0 0 60px color-mix(in srgb, var(--accent) 35%, transparent); }
+.space .ring { position: absolute; left: 50%; top: 40%; aspect-ratio: 1; border-radius: 50%; border: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent); transform: translate(-50%,-50%) rotateX(70deg); }
+.space .ring.r1 { width: 32%; } .space .ring.r2 { width: 46%; border-color: color-mix(in srgb, var(--violet) 40%, transparent); }
+.pnl { position: absolute; top: 24%; width: 26%; aspect-ratio: 16 / 10; border: 1px solid var(--accent-edge); border-radius: var(--r-xs);
+  background: color-mix(in srgb, var(--surface) 90%, transparent); padding: 6px; display: grid; grid-template-rows: auto 1fr; gap: 4px; }
+.pnl b { display: block; font: var(--fw-medium) 10px/1.2 var(--font-mono); color: var(--accent); letter-spacing: .06em; }
 .pnl i { display: block; border-radius: 3px; background:
   linear-gradient(var(--line) 0 0) 0 0 / 70% 3px no-repeat,
   linear-gradient(var(--line) 0 0) 0 8px / 50% 3px no-repeat,
@@ -236,19 +285,19 @@ main { min-height: calc(100vh - var(--header-h)); }
 .space-gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity var(--dur-slow) var(--ease-out); }
 .space.gl .space-gl { opacity: 1; }
 .space.gl .stars, .space.gl .floor, .space.gl .ring, .space.gl .core { display: none; }
-.space figcaption { position: absolute; left: var(--s3); bottom: var(--s3); font: 500 12px/1.3 var(--font-mono); color: var(--muted); background: rgba(7,10,18,.8); padding: var(--s1) var(--s2); border-radius: var(--r-sm); }
+.space figcaption { position: absolute; left: var(--s3); bottom: var(--s3); font: var(--fw-medium) 12px/1.3 var(--font-mono); color: var(--text-2); background: color-mix(in srgb, var(--bg) 85%, transparent); border: 1px solid var(--line); padding: var(--s1) var(--s2); border-radius: var(--r-full); }
 @media (prefers-reduced-motion: no-preference) {
   .space .core { animation: pulse 4s ease-in-out infinite; }
   .space .floor { animation: sweep 9s linear infinite; }
 }
-@keyframes pulse { 50% { box-shadow: 0 0 90px rgba(94,230,208,.5); } }
+@keyframes pulse { 50% { box-shadow: 0 0 90px color-mix(in srgb, var(--accent) 50%, transparent); } }
 @keyframes sweep { to { transform: translateX(-50%) rotateX(72deg) rotate(360deg); } }
 
 /* strip of truths */
 .facts { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--s3); margin-top: var(--s7); }
 @media (max-width: 768px) { .facts { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-.fact { border-top: 1px solid var(--line-strong); padding-top: var(--s3); }
-.fact strong { font: 400 var(--fs-xl)/1.1 var(--font-display); }
+.fact { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); padding: var(--s3) var(--s4); }
+.fact strong { font: var(--fw-strong) var(--fs-lg)/1.15 var(--font-display); letter-spacing: -0.02em; white-space: nowrap; }
 .fact span { color: var(--muted); font-size: var(--fs-xs); }
 
 /* layers diagram */
@@ -262,16 +311,17 @@ main { min-height: calc(100vh - var(--header-h)); }
 @media (max-width: 1024px) { .two { grid-template-columns: 1fr; } }
 .section { margin-top: var(--s8); display: grid; gap: var(--s5); }
 
-/* ── SCENES ── */
-.tabs { display: flex; gap: var(--s2); overflow-x: auto; scrollbar-width: none; padding-bottom: var(--s1); }
+/* ── SCENES — Once UI SegmentedControl ── */
+.tabs { display: flex; gap: var(--s1); overflow-x: auto; scrollbar-width: none; padding: var(--s1); width: fit-content; max-width: 100%;
+  border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); }
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
-  flex: none; min-height: 44px; padding: 0 var(--s4); border-radius: var(--r-sm); border: 1px solid var(--line);
-  background: transparent; color: var(--muted); font: 500 var(--fs-sm)/1 var(--font-body); cursor: pointer;
-  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  flex: none; min-height: 44px; padding: 0 var(--s4); border-radius: var(--r-sm); border: 1px solid transparent;
+  background: transparent; color: var(--muted); font: var(--fw-medium) var(--fs-sm)/1 var(--font-label); cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
 }
-@media (hover: hover) { .tab:hover { color: var(--text); border-color: var(--line-strong); } }
-.tab[aria-selected="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+@media (hover: hover) { .tab:hover { color: var(--text); background: var(--surface-2); } }
+.tab[aria-selected="true"] { color: var(--accent-ink); background: var(--accent-solid); border-color: var(--accent-edge); }
 .scene { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--s5); margin-top: var(--s4); }
 @media (max-width: 1024px) { .scene { grid-template-columns: 1fr; } }
 .scene[hidden] { display: none; }
@@ -281,14 +331,14 @@ main { min-height: calc(100vh - var(--header-h)); }
 .kv div { display: grid; grid-template-columns: 120px 1fr; gap: var(--s3); padding-block: var(--s2); border-bottom: 1px solid var(--line); }
 .kv dt { color: var(--muted); font-size: var(--fs-xs); font-family: var(--font-mono); padding-top: 2px; }
 .kv dd { margin: 0; }
-kbd { font: 500 13px/1 var(--font-mono); padding: 3px 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px; background: var(--surface-2); color: var(--text); }
+kbd { font: var(--fw-medium) 13px/1 var(--font-mono); padding: 3px 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: var(--r-xs); background: var(--surface-2); color: var(--text); }
 /* scene variants */
 .space.workbench .pnl.c { width: 40%; left: 30%; top: 12%; }
-.space.stage .pnl.c { width: 52%; left: 24%; top: 10%; border-color: rgba(165,139,255,.6); }
+.space.stage .pnl.c { width: 52%; left: 24%; top: 10%; border-color: var(--violet-edge); }
 .space.stage .pnl.c b { color: var(--violet); }
 .space.stage .pnl.l, .space.stage .pnl.r { width: 18%; top: 34%; }
-.space.arena .core { background: radial-gradient(circle at 40% 35%, #fff1d6, var(--warn) 35%, rgba(255,196,107,0) 72%); box-shadow: 0 0 60px rgba(255,196,107,.35); }
-.space.arena .ring.r1 { border-color: rgba(255,196,107,.5); }
+.space.arena .core { background: radial-gradient(circle at 40% 35%, var(--warning-on-background-medium), var(--warn) 35%, transparent 72%); box-shadow: 0 0 60px color-mix(in srgb, var(--warn) 35%, transparent); }
+.space.arena .ring.r1 { border-color: color-mix(in srgb, var(--warn) 50%, transparent); }
 .space.focus .pnl.l, .space.focus .pnl.r { display: none; }
 .space.focus .pnl.c { width: 46%; left: 27%; top: 20%; transform: none; }
 .bot { position: absolute; width: 14px; height: 14px; border: 1.5px solid var(--warn); transform: rotate(45deg); }
@@ -298,23 +348,26 @@ kbd { font: 500 13px/1 var(--font-mono); padding: 3px 6px; border: 1px solid var
 @media (max-width: 768px) { .svc-grid { grid-template-columns: 1fr; } }
 .svc { display: grid; gap: var(--s3); align-content: start; }
 .svc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s3); }
-.svc-name { font: 400 var(--fs-xl)/1.1 var(--font-display); }
+.svc-name { font: var(--fw-strong) var(--fs-xl)/1.1 var(--font-display); letter-spacing: -0.025em; }
 .svc ul { margin: 0; padding-left: var(--s4); color: var(--muted); display: grid; gap: var(--s1); }
 .svc .links { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s2); }
 .svc.pending-card { border-style: dashed; }
 
-/* ── DEVICES ── */
+/* ── DEVICES — Once UI Chip ── */
 .filters { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s4); }
-.chip { min-height: 44px; padding: 0 var(--s3); border-radius: var(--r-sm); border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; font: 500 var(--fs-xs)/1 var(--font-body); }
-.chip[aria-pressed="true"] { color: var(--text); border-color: var(--accent); background: var(--surface-2); }
-@media (hover: hover) { .chip:hover { color: var(--text); } }
-.dev-table { width: 100%; border-collapse: collapse; }
+.chip { min-height: 44px; padding: 0 var(--s4); border-radius: var(--r-full); border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer; font: var(--fw-medium) var(--fs-xs)/1 var(--font-label);
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.chip[aria-pressed="true"] { color: var(--accent); border-color: var(--accent-edge); background: var(--accent-wash); }
+@media (hover: hover) { .chip:hover { color: var(--text); background: var(--surface-2); } }
+.dev-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); overflow: hidden; }
 .dev-table th, .dev-table td { text-align: left; padding: var(--s3); border-bottom: 1px solid var(--line); vertical-align: top; }
-.dev-table th { font: 500 var(--fs-xs)/1.4 var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-.dev-table td:first-child { font-weight: 600; }
+.dev-table tr:last-child td { border-bottom: 0; }
+.dev-table th { font: var(--fw-medium) var(--fs-xs)/1.4 var(--font-label); color: var(--muted); background: var(--surface-2); }
+.dev-table td:first-child { font-weight: var(--fw-strong); }
 .dev-table td.note { color: var(--muted); }
-.dev-group td { padding-top: var(--s5); color: var(--accent); font: 500 var(--fs-xs)/1.4 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; border-bottom-color: var(--line-strong); }
+.dev-group td { padding-top: var(--s4); color: var(--accent); font: var(--fw-medium) var(--fs-xs)/1.4 var(--font-mono); letter-spacing: .04em; text-transform: uppercase; }
 @media (max-width: 768px) {
+  .dev-table { border: 0; background: transparent; border-radius: 0; }
   .dev-table thead { display: none; }
   .dev-table tr:not(.dev-group) { display: grid; gap: var(--s2); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
   .dev-table td { display: block; border: 0; padding: 0; }
@@ -327,38 +380,38 @@ kbd { font: 500 13px/1 var(--font-mono); padding: 3px 6px; border: 1px solid var
 @media (max-width: 1024px) { .wizard { grid-template-columns: 1fr; } }
 .steps-nav { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); align-content: start; counter-reset: s; }
 .steps-nav li { display: grid; grid-template-columns: 32px 1fr; gap: var(--s3); align-items: center; padding: var(--s3); border-radius: var(--r-sm); color: var(--muted); }
-.steps-nav li::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line-strong); font: 500 var(--fs-xs)/1 var(--font-mono); }
-.steps-nav li[aria-current="step"] { color: var(--text); background: var(--surface); }
+.steps-nav li::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line-strong); font: var(--fw-medium) var(--fs-xs)/1 var(--font-mono); }
+.steps-nav li[aria-current="step"] { color: var(--text); background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
 .steps-nav li[aria-current="step"]::before { border-color: var(--accent); color: var(--accent); }
-.steps-nav li.done::before { content: "✓"; background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.steps-nav li.done::before { content: "✓"; background: var(--accent-solid); color: var(--accent-ink); border-color: var(--accent-edge); }
 @media (max-width: 1024px) { .steps-nav { grid-template-columns: repeat(3, minmax(0,1fr)); } .steps-nav li { grid-template-columns: 1fr; justify-items: start; gap: var(--s2); padding: var(--s2); font-size: var(--fs-xs); } }
 .opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--s3); border: 0; padding: 0; margin: 0; }
-.opts legend { font: 400 var(--fs-lg)/1.2 var(--font-display); margin-bottom: var(--s4); padding: 0; }
+.opts legend { font: var(--fw-strong) var(--fs-lg)/1.2 var(--font-display); letter-spacing: -0.02em; margin-bottom: var(--s4); padding: 0; }
 .opt { position: relative; }
 .opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .opt label { display: grid; gap: var(--s2); height: 100%; padding: var(--s4); border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); cursor: pointer;
-  transition: border-color var(--dur-fast) var(--ease-out); }
-.opt label strong { font-weight: 600; }
+  transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out); }
+.opt label strong { font-weight: var(--fw-strong); }
 .opt label span { color: var(--muted); font-size: var(--fs-xs); }
 @media (hover: hover) { .opt label:hover { border-color: var(--line-strong); } }
-.opt input:checked + label { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.opt input:checked + label { border-color: var(--accent); background: var(--accent-wash); box-shadow: inset 0 0 0 1px var(--accent); }
 .opt input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 3px; }
 .opt input:disabled + label { opacity: .45; cursor: not-allowed; }
 .wiz-foot { display: flex; justify-content: space-between; gap: var(--s3); margin-top: var(--s5); flex-wrap: wrap; }
 .err { color: var(--warn); font-size: var(--fs-xs); margin-top: var(--s3); min-height: 1.6em; }
-.code { position: relative; background: #05070D; border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s4); padding-right: calc(44px + var(--s5)); font: 400 var(--fs-xs)/1.7 var(--font-mono); color: var(--text); overflow-x: auto; white-space: pre; }
+.code { position: relative; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-md); padding: var(--s4); padding-right: calc(44px + var(--s5)); font: 400 var(--fs-xs)/1.7 var(--font-mono); color: var(--text); overflow-x: auto; white-space: pre; }
 .code .copy { position: absolute; top: var(--s2); right: var(--s2); }
 .code-wrap { display: grid; gap: var(--s3); }
 .result ol { margin: 0; padding-left: var(--s4); display: grid; gap: var(--s2); }
-.note-box { padding: var(--s3) var(--s4); border: 1px solid rgba(255,196,107,.35); border-radius: var(--r-sm); color: var(--text); background: rgba(255,196,107,.06); }
+.note-box { padding: var(--s3) var(--s4); border: 1px solid var(--warn-edge); border-radius: var(--r-md); color: var(--text); background: var(--warn-wash); }
 .note-box strong { color: var(--warn); }
 
 /* ── PRICING ── */
 .tiers { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--s4); }
 @media (max-width: 1024px) { .tiers { grid-template-columns: 1fr; } }
 .tier { display: grid; gap: var(--s3); grid-template-rows: auto auto auto 1fr auto; }
-.price { font: 400 var(--fs-2xl)/1 var(--font-display); }
-.price small { font: 500 var(--fs-xs)/1 var(--font-mono); color: var(--muted); margin-left: var(--s2); }
+.price { font: var(--fw-strong) var(--fs-2xl)/1 var(--font-display); letter-spacing: -0.03em; white-space: nowrap; }
+.price small { font: var(--fw-medium) var(--fs-xs)/1 var(--font-mono); color: var(--muted); margin-left: var(--s2); letter-spacing: 0; }
 .tier ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
 .tier li { display: grid; grid-template-columns: 20px 1fr; gap: var(--s2); color: var(--muted); }
 .tier li svg { color: var(--accent); margin-top: 4px; }
@@ -366,7 +419,7 @@ kbd { font: 500 13px/1 var(--font-mono); padding: 3px 6px; border: 1px solid var
 @media (max-width: 1024px) { .support { grid-template-columns: 1fr; } }
 .support .acts { display: flex; flex-wrap: wrap; gap: var(--s3); }
 .faq details { border-bottom: 1px solid var(--line); }
-.faq summary { cursor: pointer; padding: var(--s3) 0; min-height: 44px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: var(--s3); }
+.faq summary { cursor: pointer; padding: var(--s3) 0; min-height: 44px; font-weight: var(--fw-strong); list-style: none; display: flex; justify-content: space-between; gap: var(--s3); }
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after { content: "+"; font-family: var(--font-mono); color: var(--accent); }
 .faq details[open] summary::after { content: "–"; }
@@ -375,17 +428,17 @@ kbd { font: 500 13px/1 var(--font-mono); padding: 3px 6px; border: 1px solid var
 /* ── SPEC ── */
 .spec-grid { display: grid; grid-template-columns: 220px 1fr; gap: var(--s6); }
 @media (max-width: 1024px) { .spec-grid { grid-template-columns: 1fr; } }
-.toc { position: sticky; top: calc(var(--header-h) + var(--s4)); align-self: start; display: grid; gap: var(--s1); }
+.toc { position: sticky; top: calc(var(--header-h) + var(--s4)); align-self: start; display: grid; gap: var(--s1); padding-left: var(--s3); border-left: 1px solid var(--line); }
 .toc a { color: var(--muted); text-decoration: none; padding: var(--s2) 0; font-size: var(--fs-xs); min-height: 44px; display: flex; align-items: center; }
 @media (hover: hover) { .toc a:hover { color: var(--text); } }
-@media (max-width: 1024px) { .toc { position: static; display: flex; flex-wrap: wrap; gap: 0 var(--s4); } }
+@media (max-width: 1024px) { .toc { position: static; display: flex; flex-wrap: wrap; gap: 0 var(--s4); padding-left: 0; border-left: 0; } }
 .spec-body { display: grid; gap: var(--s7); }
 .spec-body section { display: grid; gap: var(--s3); }
-.spec-body h2 { font: 400 var(--fs-xl)/1.15 var(--font-display); }
-.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: var(--s3); }
+.spec-body h2 { font: var(--fw-strong) var(--fs-xl)/1.15 var(--font-display); letter-spacing: -0.025em; }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: var(--s3); }
 .sw { display: grid; gap: var(--s2); }
 .sw i { display: block; aspect-ratio: 3 / 2; border-radius: var(--r-sm); border: 1px solid var(--line-strong); }
-.sw b { font: 500 var(--fs-xs)/1.3 var(--font-mono); }
+.sw b { font: var(--fw-medium) var(--fs-xs)/1.3 var(--font-mono); overflow-wrap: anywhere; }
 .sw span { font: 400 12px/1.3 var(--font-mono); color: var(--muted); }
 .typespec { display: grid; gap: var(--s3); }
 .typespec div { display: grid; grid-template-columns: 120px 1fr; gap: var(--s3); align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: var(--s3); }
@@ -393,19 +446,19 @@ kbd { font: 500 13px/1 var(--font-mono); padding: 3px 6px; border: 1px solid var
 .typespec .mono { color: var(--muted); font-size: 12px; }
 table.spec { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); }
 table.spec th, table.spec td { text-align: left; padding: var(--s2) var(--s3); border-bottom: 1px solid var(--line); vertical-align: top; }
-table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight: 500; }
+table.spec th { color: var(--muted); font-family: var(--font-label); font-weight: var(--fw-medium); }
 .tbl-scroll { overflow-x: auto; }
 
 /* footer */
 .site-foot { border-top: 1px solid var(--line); padding-block: var(--s6); color: var(--muted); font-size: var(--fs-xs); }
 .site-foot .wrap { display: flex; flex-wrap: wrap; gap: var(--s4); justify-content: space-between; }
 .site-foot nav { display: flex; flex-wrap: wrap; gap: var(--s4); }
-.site-foot a { color: var(--muted); }
+.site-foot a { color: var(--muted); text-decoration: none; }
 @media (hover: hover) { .site-foot a:hover { color: var(--text); } }
 
-/* toast */
+/* toast — Once UI Toast */
 .toast { position: fixed; left: 50%; bottom: var(--s5); transform: translate(-50%, 16px); opacity: 0; pointer-events: none;
-  background: var(--surface-2); border: 1px solid var(--accent); color: var(--text); padding: var(--s3) var(--s4); border-radius: var(--r-sm); font-size: var(--fs-xs); z-index: 40;
+  background: var(--surface); border: 1px solid var(--line-strong); color: var(--text); padding: var(--s3) var(--s4); border-radius: var(--r-md); font-size: var(--fs-xs); z-index: 40; box-shadow: var(--shadow-l);
   transition: opacity var(--dur-fast) var(--ease-in), transform var(--dur-fast) var(--ease-in); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
 
@@ -460,9 +513,9 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
   <div class="wrap">
     <div class="hero">
       <div class="hero-copy">
-        <span class="eyebrow">The Human Node Generator · free &amp; open-source</span>
-        <h1 class="display" id="h-home">Your computer,<br>turned into <em>space</em>.</h1>
-        <p class="lede">THNG is a spatial operating system. Your windows, streams and games float as panels around you, on a monitor, in a headset or on your wrist. It's built in the open on Spatial Desktop.</p>
+        <span class="eyebrow font-code">The Human Node Generator · free &amp; open-source</span>
+        <h1 class="display font-heading" id="h-home">Your computer,<br>turned into <em>space</em>.</h1>
+        <p class="lede neutral-on-background-weak">THNG is a spatial operating system. Your windows, streams and games float as panels around you, on a monitor, in a headset or on your wrist. It's built in the open on Spatial Desktop.</p>
         <div class="hero-ctas">
           <a class="btn primary" href="#/install">Install THNG <svg width="18" height="18" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           <a class="btn" href="https://spatialdesktop.thng.my/app/" rel="noopener">Try it in your browser</a>
@@ -491,11 +544,11 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 
     <div class="section two">
       <div class="od-stack" style="--od-gap: var(--s3)">
-        <span class="eyebrow">What's a node?</span>
-        <h2 class="h2">Every device you own is a node. THNG wires them into one space.</h2>
+        <span class="eyebrow font-code">What's a node?</span>
+        <h2 class="h2 font-heading">Every device you own is a node. THNG wires them into one space.</h2>
       </div>
       <div class="od-stack" style="--od-gap: var(--s4)">
-        <p class="lede">Your laptop renders the scene, your headset steps into it and your watch nudges a panel along. Each device runs the THNG node, which offers whatever that device can actually do and nothing it can't.</p>
+        <p class="lede neutral-on-background-weak">Your laptop renders the scene, your headset steps into it and your watch nudges a panel along. Each device runs the THNG node, which offers whatever that device can actually do and nothing it can't.</p>
         <div class="layers" aria-label="THNG system layers">
           <div class="layer"><span class="mono">01 · Node</span><span>The runtime on each device. It detects the screen, input, capture and XR the device supports.</span></div>
           <div class="layer"><span class="mono">02 · Scene</span><span>The space you're in: sky, platform, lighting, sound and layout rules.</span></div>
@@ -507,16 +560,16 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 
     <div class="section">
       <div class="od-row" style="justify-content:space-between;flex-wrap:wrap;--od-gap:var(--s3)">
-        <h2 class="h2">Start where you are</h2>
+        <h2 class="h2 font-heading">Start where you are</h2>
         <a href="#/devices">See every device <svg width="16" height="16" aria-hidden="true" style="vertical-align:-3px"><use href="#i-arrow"/></svg></a>
       </div>
       <div class="svc-grid">
-        <a class="panel svc" href="#/install" style="color:inherit;text-decoration:none">
+        <a class="panel surface-background svc" href="#/install" style="color:inherit;text-decoration:none">
           <span class="status avail">Available today</span>
           <span class="h3">Linux with Hyprland</span>
           <p class="muted">The full experience. Hyprland itself becomes a panel, along with your Windows VM and app launching.</p>
         </a>
-        <a class="panel svc" href="#/install" style="color:inherit;text-decoration:none">
+        <a class="panel surface-background svc" href="#/install" style="color:inherit;text-decoration:none">
           <span class="status avail">Available today</span>
           <span class="h3">Windows · macOS · Android · Web</span>
           <p class="muted">The whole scene, plus window panels where the OS allows screen capture.</p>
@@ -530,9 +583,9 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 <section class="page" data-route="/scenes" aria-labelledby="h-scenes">
   <div class="wrap">
     <div class="page-head">
-      <span class="eyebrow">Scenes</span>
-      <h1 class="h2" id="h-scenes">One OS, many spaces.</h1>
-      <p class="lede">A scene is the room your panels live in. Switch between them with <kbd>S</kbd>. Your panels come with you, and each scene re-lays them out for what you're doing.</p>
+      <span class="eyebrow font-code">Scenes</span>
+      <h1 class="h2 font-heading" id="h-scenes">One OS, many spaces.</h1>
+      <p class="lede neutral-on-background-weak">A scene is the room your panels live in. Switch between them with <kbd>S</kbd>. Your panels come with you, and each scene re-lays them out for what you're doing.</p>
     </div>
 
     <div class="tabs" role="tablist" aria-label="Scenes">
@@ -550,7 +603,7 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
       </figure>
       <div class="scene-copy">
         <span class="status avail">Available today</span>
-        <h2 class="h2">Deep Space</h2>
+        <h2 class="h2 font-heading">Deep Space</h2>
         <p class="muted">The home scene from Spatial Desktop: a nebula sky, a living neural core, a network of firing neurons and a holographic platform. It's all generated in code and drawn in a handful of draw calls.</p>
         <dl class="kv">
           <div><dt>Layouts</dt><dd>Arc, grid, stack. Cycle with <kbd>L</kbd></dd></div>
@@ -567,7 +620,7 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
       </figure>
       <div class="scene-copy">
         <span class="status planned">Planned</span>
-        <h2 class="h2">Workbench</h2>
+        <h2 class="h2 font-heading">Workbench</h2>
         <p class="muted">A quieter space for long sessions. The core drops below the horizon, the sky dims and a big main panel sits at reading distance with references on either side.</p>
         <dl class="kv">
           <div><dt>Layouts</dt><dd>Main + side panels</dd></div>
@@ -584,7 +637,7 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
       </figure>
       <div class="scene-copy">
         <span class="status planned">Planned</span>
-        <h2 class="h2">Stage</h2>
+        <h2 class="h2 font-heading">Stage</h2>
         <p class="muted">Built for thngPlay. Watch on a cinema-sized panel, or go live and keep your chat and stream controls within reach.</p>
         <dl class="kv">
           <div><dt>Layouts</dt><dd>Theatre, broadcaster</dd></div>
@@ -601,7 +654,7 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
       </figure>
       <div class="scene-copy">
         <span class="status avail">Available today</span>
-        <h2 class="h2">Arena</h2>
+        <h2 class="h2 font-heading">Arena</h2>
         <p class="muted">The platform becomes the battlefield for Rogue Protocol, a wave shooter built in. Every cleared wave jumps you to a new sector of the universe.</p>
         <dl class="kv">
           <div><dt>Enter</dt><dd><kbd>G</kbd> or the Play button</dd></div>
@@ -618,7 +671,7 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
       </figure>
       <div class="scene-copy">
         <span class="status planned">Planned</span>
-        <h2 class="h2">Focus</h2>
+        <h2 class="h2 font-heading">Focus</h2>
         <p class="muted">One panel and nothing else. Notifications wait, the neurons rest and the music stops. Your watch can bring the rest back with one tap.</p>
         <dl class="kv">
           <div><dt>Layouts</dt><dd>Single panel</dd></div>
@@ -634,32 +687,32 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 <section class="page" data-route="/services" aria-labelledby="h-services">
   <div class="wrap">
     <div class="page-head">
-      <span class="eyebrow">Services</span>
-      <h1 class="h2" id="h-services">Built-in, free and open.</h1>
-      <p class="lede">These ship with THNG and open as panels in any scene. Every one is free.</p>
+      <span class="eyebrow font-code">Services</span>
+      <h1 class="h2 font-heading" id="h-services">Built-in, free and open.</h1>
+      <p class="lede neutral-on-background-weak">These ship with THNG and open as panels in any scene. Every one is free.</p>
     </div>
     <div class="svc-grid">
-      <article class="panel pad-lg svc pending-card" aria-labelledby="s-forg">
+      <article class="panel surface-background pad-lg svc pending-card" aria-labelledby="s-forg">
         <div class="svc-top"><h2 class="svc-name" id="s-forg">FORG</h2><span class="status pending">Description pending</span></div>
         <p class="muted">FORG ships with THNG. Its description is waiting on the maintainers, so this card stays empty until they write it.</p>
         <div class="links"><a href="https://github.com/ORANGOPUS/thng/issues" rel="noopener">Help describe FORG</a></div>
       </article>
 
-      <article class="panel pad-lg svc" aria-labelledby="s-play">
+      <article class="panel surface-background pad-lg svc" aria-labelledby="s-play">
         <div class="svc-top"><h2 class="svc-name" id="s-play">thngPlay</h2><span class="status avail">Live at thng.my</span></div>
         <p>Interactive live streaming with sub-second latency over FTL.</p>
         <ul><li>Watch streams as a panel, or full-size in the Stage scene</li><li>Go live from inside your space</li><li>Recommended channels and categories</li></ul>
         <div class="links"><a href="https://thng.my" rel="noopener">Open thng.my</a></div>
       </article>
 
-      <article class="panel pad-lg svc" aria-labelledby="s-sd">
+      <article class="panel surface-background pad-lg svc" aria-labelledby="s-sd">
         <div class="svc-top"><h2 class="svc-name" id="s-sd">Spatial Desktop</h2><span class="status avail">Available today</span></div>
         <p>The core THNG grows from. Your Hyprland desktop, your apps and your Windows VM as panels in WebXR, built on IWSDK.</p>
         <ul><li>Hyprland as a panel, with your real mouse and keyboard</li><li>Any window, region or monitor as a panel</li><li>3D launcher dock, and a GPU-adaptive render scale</li></ul>
         <div class="links"><a href="https://spatialdesktop.thng.my/" rel="noopener">Download</a><a href="https://github.com/ORANGOPUS/spatial-desktop" rel="noopener">Source</a></div>
       </article>
 
-      <article class="panel pad-lg svc" aria-labelledby="s-rp">
+      <article class="panel surface-background pad-lg svc" aria-labelledby="s-rp">
         <div class="svc-top"><h2 class="svc-name" id="s-rp">Rogue Protocol</h2><span class="status avail">Available today</span></div>
         <p>A wave shooter played from the platform: drones, gunships, lancers and an Overseer every fifth wave.</p>
         <ul><li>A shield that parries bolts back, and a nova to clear the sky</li><li>A blaster in each hand in VR</li><li>Press <kbd>G</kbd> in any scene to play</li></ul>
@@ -673,9 +726,9 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 <section class="page" data-route="/devices" aria-labelledby="h-devices">
   <div class="wrap">
     <div class="page-head">
-      <span class="eyebrow">Devices</span>
-      <h1 class="h2" id="h-devices">Every screen is a node.</h1>
-      <p class="lede">THNG aims to run on everything: desktops, phones, headsets, watches and devices you've jailbroken or rooted. Here's where each one stands today. A node only offers what its device can really do.</p>
+      <span class="eyebrow font-code">Devices</span>
+      <h1 class="h2 font-heading" id="h-devices">Every screen is a node.</h1>
+      <p class="lede neutral-on-background-weak">THNG aims to run on everything: desktops, phones, headsets, watches and devices you've jailbroken or rooted. Here's where each one stands today. A node only offers what its device can really do.</p>
     </div>
 
     <div class="filters" role="group" aria-label="Filter by status">
@@ -725,9 +778,9 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 <section class="page" data-route="/install" aria-labelledby="h-install">
   <div class="wrap">
     <div class="page-head">
-      <span class="eyebrow">Install</span>
-      <h1 class="h2" id="h-install">Three steps to space.</h1>
-      <p class="lede">Choose your device and how you want THNG on it. You'll get the exact steps.</p>
+      <span class="eyebrow font-code">Install</span>
+      <h1 class="h2 font-heading" id="h-install">Three steps to space.</h1>
+      <p class="lede neutral-on-background-weak">Choose your device and how you want THNG on it. You'll get the exact steps.</p>
     </div>
 
     <div class="wizard">
@@ -737,7 +790,7 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
         <li id="sn-3">Install</li>
       </ol>
 
-      <div class="panel pad-lg">
+      <div class="panel surface-background pad-lg">
         <form id="wiz" novalidate>
           <div class="wstep" data-step="1">
             <fieldset class="opts">
@@ -776,14 +829,14 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 <section class="page" data-route="/pricing" aria-labelledby="h-pricing">
   <div class="wrap">
     <div class="page-head">
-      <span class="eyebrow">Pricing</span>
-      <h1 class="h2" id="h-pricing">Everything is free. Forever.</h1>
-      <p class="lede">THNG is MIT-licensed and community-built. There are no paid tiers, trials or locked features. If it's useful to you, support the people building it.</p>
+      <span class="eyebrow font-code">Pricing</span>
+      <h1 class="h2 font-heading" id="h-pricing">Everything is free. Forever.</h1>
+      <p class="lede neutral-on-background-weak">THNG is MIT-licensed and community-built. There are no paid tiers, trials or locked features. If it's useful to you, support the people building it.</p>
     </div>
 
     <div class="tiers">
-      <article class="panel pad-lg tier" aria-labelledby="tier-os">
-        <span class="eyebrow">Operating system</span>
+      <article class="panel surface-background pad-lg tier" aria-labelledby="tier-os">
+        <span class="eyebrow font-code">Operating system</span>
         <h2 class="h3" id="tier-os">THNG OS + Spatial Desktop</h2>
         <div class="price od-nowrap">Free<small>MIT</small></div>
         <ul>
@@ -793,8 +846,8 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
         </ul>
         <a class="btn primary" href="#/install">Install free</a>
       </article>
-      <article class="panel pad-lg tier" aria-labelledby="tier-svc">
-        <span class="eyebrow">Services</span>
+      <article class="panel surface-background pad-lg tier" aria-labelledby="tier-svc">
+        <span class="eyebrow font-code">Services</span>
         <h2 class="h3" id="tier-svc">FORG · thngPlay · Rogue Protocol</h2>
         <div class="price od-nowrap">Free<small>built-in</small></div>
         <ul>
@@ -804,8 +857,8 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
         </ul>
         <a class="btn" href="#/services">See services</a>
       </article>
-      <article class="panel pad-lg tier" aria-labelledby="tier-node">
-        <span class="eyebrow">Companion nodes</span>
+      <article class="panel surface-background pad-lg tier" aria-labelledby="tier-node">
+        <span class="eyebrow font-code">Companion nodes</span>
         <h2 class="h3" id="tier-node">Watch &amp; phone nodes</h2>
         <div class="price od-nowrap">Free<small>planned</small></div>
         <ul>
@@ -817,9 +870,9 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
       </article>
     </div>
 
-    <div class="panel pad-lg support">
+    <div class="panel surface-background pad-lg support">
       <div class="od-stack" style="--od-gap:var(--s3)">
-        <h2 class="h2">Keep the lights on in space</h2>
+        <h2 class="h2 font-heading">Keep the lights on in space</h2>
         <p class="muted">Sponsorship pays for code-signing certificates, test hardware and maintainers' time. It never unlocks features.</p>
       </div>
       <div class="acts">
@@ -829,7 +882,7 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
     </div>
 
     <div class="section faq" style="margin-top:var(--s7)">
-      <h2 class="h2">Questions</h2>
+      <h2 class="h2 font-heading">Questions</h2>
       <div>
         <details><summary>Will there ever be a paid version?</summary><p>No. THNG and its services are MIT-licensed. Sponsorship is optional and doesn't change what you get.</p></details>
         <details><summary>Can I fork it, sell it or ship it on my hardware?</summary><p>Yes. The MIT license allows commercial use, modification and redistribution. Just keep the license notice.</p></details>
@@ -843,9 +896,9 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 <section class="page" data-route="/spec" aria-labelledby="h-spec">
   <div class="wrap">
     <div class="page-head">
-      <span class="eyebrow">Spec · thng-ds-1</span>
-      <h1 class="h2" id="h-spec">How THNG is put together.</h1>
-      <p class="lede">The short version of the system and design spec. The full document is <a href="https://github.com/ORANGOPUS/thng/blob/main/SPEC.md" rel="noopener">SPEC.md</a> in the repo.</p>
+      <span class="eyebrow font-code">Spec · thng-ds-2 · Once UI</span>
+      <h1 class="h2 font-heading" id="h-spec">How THNG is put together.</h1>
+      <p class="lede neutral-on-background-weak">The short version of the system and design spec. The full document is <a href="https://github.com/ORANGOPUS/thng/blob/main/SPEC.md" rel="noopener">SPEC.md</a> in the repo.</p>
     </div>
 
     <div class="spec-grid">
@@ -900,33 +953,34 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
 
         <section id="spec-color">
           <h2>Colour</h2>
-          <p class="muted">The ground is dark and neutral. Cyan signals interaction and availability, and violet marks planned or secondary things. Status always comes with a text label and a shape.</p>
+          <p class="muted">Colour comes from the Once UI library, themed with <code class="mono">data-theme="dark"</code>, <code class="mono">data-neutral="gray"</code>, <code class="mono">data-brand="aqua"</code> and <code class="mono">data-accent="violet"</code>. Aqua (THNG cyan) signals interaction and availability, and violet marks planned or secondary things. Status always comes with a text label and a shape.</p>
           <div class="swatches">
-            <div class="sw"><i style="background:var(--bg)"></i><b>bg</b><span>#070A12</span></div>
-            <div class="sw"><i style="background:var(--surface)"></i><b>surface</b><span>#0E1422</span></div>
-            <div class="sw"><i style="background:var(--line)"></i><b>line</b><span>#24304A</span></div>
-            <div class="sw"><i style="background:var(--text)"></i><b>text</b><span>#E8ECF5</span></div>
-            <div class="sw"><i style="background:var(--muted)"></i><b>muted</b><span>#A3AEC4</span></div>
-            <div class="sw"><i style="background:var(--accent)"></i><b>accent</b><span>#5EE6D0</span></div>
-            <div class="sw"><i style="background:var(--violet)"></i><b>violet</b><span>#A58BFF</span></div>
-            <div class="sw"><i style="background:var(--warn)"></i><b>warn</b><span>#FFC46B</span></div>
+            <div class="sw"><i style="background:var(--page-background)"></i><b>--page-background</b><span>gray-100 · #0a0a0a</span></div>
+            <div class="sw"><i style="background:var(--surface-background)"></i><b>--surface-background</b><span>filled surface · gray-200</span></div>
+            <div class="sw"><i style="background:var(--neutral-alpha-medium)"></i><b>--neutral-alpha-medium</b><span>hairlines · gray-600 30%</span></div>
+            <div class="sw"><i style="background:var(--neutral-on-background-strong)"></i><b>--neutral-on-background-strong</b><span>text · #ffffff</span></div>
+            <div class="sw"><i style="background:var(--neutral-on-background-weak)"></i><b>--neutral-on-background-weak</b><span>secondary · gray-700</span></div>
+            <div class="sw"><i style="background:var(--brand-solid-strong)"></i><b>--brand-solid-strong</b><span>aqua-500 · buttons</span></div>
+            <div class="sw"><i style="background:var(--brand-on-background-weak)"></i><b>--brand-on-background-weak</b><span>aqua-700 · Available</span></div>
+            <div class="sw"><i style="background:var(--accent-on-background-weak)"></i><b>--accent-on-background-weak</b><span>violet-700 · Planned</span></div>
+            <div class="sw"><i style="background:var(--warning-on-background-weak)"></i><b>--warning-on-background-weak</b><span>yellow-700 · Community</span></div>
           </div>
         </section>
 
         <section id="spec-type">
           <h2>Type &amp; space</h2>
           <div class="typespec">
-            <div><span class="mono">Display</span><span style="font:400 var(--fs-xl)/1.1 var(--font-display)">Instrument Serif</span></div>
-            <div><span class="mono">Body</span><span>Inter, 16–18px, line height 1.6</span></div>
-            <div><span class="mono">Mono</span><span class="mono" style="color:var(--text);font-size:var(--fs-sm)">JetBrains Mono</span></div>
-            <div><span class="mono">Spacing</span><span>8px rhythm: 4 · 8 · 16 · 24 · 32 · 48 · 64 · 96</span></div>
-            <div><span class="mono">Radius</span><span>6px controls · 12px panels. Hairlines over shadows.</span></div>
+            <div><span class="mono">Display</span><span style="font:var(--fw-strong) var(--fs-xl)/1.1 var(--font-display);letter-spacing:-0.025em">Geist</span></div>
+            <div><span class="mono">Body</span><span>Geist, 16–18px, line height 1.6 (Once UI <code class="mono">--font-body</code>)</span></div>
+            <div><span class="mono">Mono</span><span class="mono" style="color:var(--text);font-size:var(--fs-sm)">Geist Mono</span></div>
+            <div><span class="mono">Spacing</span><span>Once UI <code class="mono">--static-space-*</code>: 4 · 8 · 16 · 24 · 32 · 48 · 64 · 104</span></div>
+            <div><span class="mono">Radius</span><span>Once UI <code class="mono">data-border="playful"</code>: 4 · 12 controls · 16 cards · 20 figures · full pills</span></div>
           </div>
         </section>
 
         <section id="spec-motion">
           <h2>Motion</h2>
-          <p class="muted">Motion explains a change in state. Small interactions take 150–300ms with ease-out on enter, and exits run at about 60% of that with ease-in. Ambient motion in the scene stops when <code class="mono">prefers-reduced-motion</code> is set.</p>
+          <p class="muted">Motion explains a change in state. Durations come from Once UI's transition tokens. Small interactions take 150–200ms with ease-out on enter, and exits run at about 60% of that with ease-in. Ambient motion in the scene stops when <code class="mono">prefers-reduced-motion</code> is set.</p>
         </section>
       </div>
     </div>
@@ -1105,7 +1159,7 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
   }
   function renderResult() {
     const dev = form.device.value, m = METHODS[dev].find(x => x.id === checked('method')), body = $('#resultBody');
-    let html = `<div class="od-row" style="justify-content:space-between;flex-wrap:wrap"><h2 class="h2" style="font-size:var(--fs-xl)">${esc(m.name)}</h2><span class="status ${m.status}">${STATUS_LABEL[m.status]}</span></div>
+    let html = `<div class="od-row" style="justify-content:space-between;flex-wrap:wrap"><h2 class="h2 font-heading" style="font-size:var(--fs-xl)">${esc(m.name)}</h2><span class="status ${m.status}">${STATUS_LABEL[m.status]}</span></div>
       <ol>${m.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>`;
     if (m.cmd) html += `<div class="code-wrap"><pre class="code"><code>${esc(m.cmd)}</code><button type="button" class="btn icon copy" aria-label="Copy commands"><svg width="18" height="18" aria-hidden="true"><use href="#i-copy"/></svg></button></pre></div>`;
     if (m.link) html += `<a class="btn primary" href="${m.link}" rel="noopener">${m.link.includes('/app/') ? 'Open the web app' : 'Download'} <svg width="18" height="18" aria-hidden="true"><use href="#i-arrow"/></svg></a>`;
@@ -1155,9 +1209,9 @@ table.spec th { color: var(--muted); font-family: var(--font-mono); font-weight:
     const FS = `
 precision mediump float;
 uniform vec2 R; uniform float T;
-const vec3 BG = vec3(0.027, 0.039, 0.071);
-const vec3 CY = vec3(0.369, 0.902, 0.816);
-const vec3 VI = vec3(0.647, 0.545, 1.0);
+const vec3 BG = vec3(0.039, 0.039, 0.039);   /* --page-background gray-100 */
+const vec3 CY = vec3(0.004, 0.780, 0.765);   /* aqua-700 */
+const vec3 VI = vec3(0.780, 0.635, 0.992);    /* violet-700 */
 const vec2 CORE = vec2(0.0, 0.10);
 const vec2 PLAT = vec2(0.0, -0.42);
 float h21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }

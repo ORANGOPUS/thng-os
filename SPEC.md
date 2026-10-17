@@ -2,7 +2,7 @@
 
 **THNG, The Human Node Generator**, is a free, open-source (MIT) spatial operating system. It grows out of [Spatial Desktop](https://github.com/ORANGOPUS/spatial-desktop) and turns every device you own into a *node* in one shared space.
 
-Spec version: `thng-ds-1` · Status: draft
+Spec version: `thng-ds-2` (Once UI) · Status: draft
 
 > **Status key**, used throughout:
 > - **Available today**: ships in the current Spatial Desktop release.
@@ -131,43 +131,69 @@ Everything is **free**: THNG OS, Spatial Desktop, every service and every compan
 
 ## 9. Design tokens
 
+THNG's design system is the [Once UI](https://once-ui.com) library, `@once-ui-system/core` **2.1.0** (MIT). Its global stylesheets are vendored in `vendor/once-ui/` (`tokens.css`, `styles.css`, `LICENSE`) and linked before the page's own styles. The React components are not used: they need Next.js 15.5+ and Sass, and the site is a static page.
+
+### Theme
+
+Set as attributes on `<html>`:
+
+| Attribute | Value | Effect |
+| --- | --- | --- |
+| `data-theme` | `dark` | Dark scheme |
+| `data-neutral` | `gray` | Pure gray neutrals |
+| `data-brand` | `aqua` | Brand scale. Once UI's aqua is the match for THNG cyan `#5EE6D0`; its `cyan` is a sky blue |
+| `data-accent` | `violet` | Secondary / *Planned* |
+| `data-surface` | `filled` | Opaque card surfaces |
+| `data-solid` | `color` | Solid buttons use the brand colour |
+| `data-border` | `playful` | Radius scale |
+| `data-transition` | `all` | Transitions on |
+| `data-desktop-size` / `-tablet-size` / `-mobile-size` | `16` | 16px root size |
+
+Switching the brand is a one-attribute change, for example `data-brand="cyan"`.
+
 ### Colour
 
-| Token | Value | Use |
-| --- | --- | --- |
-| `--bg` | `#070A12` | Page / sky ground |
-| `--surface` | `#0E1422` | Panels |
-| `--surface-2` | `#141C2E` | Hover / raised |
-| `--line` | `#24304A` | Hairlines |
-| `--text` | `#E8ECF5` | Body text (≈16:1 on bg) |
-| `--muted` | `#A3AEC4` | Secondary text (≈9:1 on bg) |
-| `--accent` | `#5EE6D0` | Interaction, *Available* |
-| `--violet` | `#A58BFF` | Secondary, *Planned* |
-| `--warn` | `#FFC46B` | *Community*, errors, Arena |
+THNG's short names are aliases onto Once UI's semantic tokens:
 
-Status always comes with a **text label and a shape**: a filled dot means available, a ring means planned, a diamond means community-supported and a dashed square means pending.
+| THNG alias | Once UI token | Resolves to (dark) | Use |
+| --- | --- | --- | --- |
+| `--bg` | `--page-background` | gray-100 `#0a0a0a` | Page / sky ground |
+| `--surface` | `--surface-background` | gray-200 | Cards, panels |
+| `--surface-2` | `--neutral-alpha-weak` | gray-600 at 15% | Hover, raised |
+| `--line` | `--neutral-alpha-medium` | gray-600 at 30% | Hairlines |
+| `--text` | `--neutral-on-background-strong` | `#ffffff` | Body text |
+| `--muted` | `--neutral-on-background-weak` | gray-700 `#b2b2b2` (≈9:1) | Secondary text |
+| `--accent` | `--brand-on-background-weak` | aqua-700 `#01c7c3` (≈9:1) | Links, icons, focus, *Available* |
+| `--accent-solid` | `--brand-solid-strong` | aqua-500 `#0b8184` | Primary buttons, selected tabs (white text ≈4.7:1) |
+| `--violet` | `--accent-on-background-weak` | violet-700 `#c7a2fd` | *Planned* |
+| `--warn` | `--warning-on-background-weak` | yellow-700 `#fe9c0b` | *Community*, errors, Arena |
+
+Status always comes with a **text label and a shape**: a filled dot means available, a ring means planned, a diamond means community-supported and a dashed square means pending. Status marks render as Once UI–style tags (pill, tinted `*-alpha-weak` fill, `*-alpha-strong` border).
 
 ### Type
 
-| Role | Family | Size |
+| Role | Family | Once UI variable |
 | --- | --- | --- |
-| Display | Instrument Serif | clamp(48px, 9vw, 96px) hero · 48px H2 |
-| Body | Inter | 16–18px, line height 1.6 |
-| Mono | JetBrains Mono | 14px labels, commands |
+| Display / headings | Geist 600, tracking −0.025 to −0.035em | `--font-heading` |
+| Body | Geist 400, 16–18px, line height 1.6 | `--font-body` |
+| Labels | Geist 500 | `--font-label` |
+| Mono | Geist Mono | `--font-code` |
 
-Scale: 14 · 16 · 18 · 24 · 32 · 48 · hero.
+Geist is loaded from Google Fonts because Once UI's own font loading is Next.js-only. Hero: `clamp(44px, 7vw, 80px)`.
 
 ### Space, shape, motion
 
-- Spacing: 4 · 8 · 16 · 24 · 32 · 48 · 64 · 96
-- Radius: 6px controls · 12px panels. Hairlines are used instead of shadows.
+- Spacing: Once UI `--static-space-*`: 4 · 8 · 16 · 24 · 32 · 48 · 64 · 104
+- Radius (`playful`): `--radius-xs` 4px · `--radius-m` 12px controls · `--radius-l` 16px cards · `--radius-xl` 20px figures · `--radius-full` pills
+- Shadows: Once UI `--shadow-xs` on cards, `--shadow-l` on figures and toasts.
+- Background: Once UI–style grid + dots + brand glow, masked to the top of each page.
 - Icons: one inline-SVG stroke family, 1.5px stroke, round caps.
-- Motion: 150–300ms ease-out on enter, with exits at about 60% of that and ease-in. Route transitions take 240ms. All motion respects `prefers-reduced-motion`.
+- Motion: Once UI durations (`--transition-duration-macro-short` 150ms, `micro-medium` 200ms, `micro-long` 400ms), ease-out on enter and ease-in on exit. All motion respects `prefers-reduced-motion`.
 
 ## 10. Accessibility
 
 - Text contrast is at least 4.5:1, and icons and status marks at least 3:1.
-- Every control is reachable by keyboard, with a visible 2px cyan focus ring.
+- Every control is reachable by keyboard, with a visible 2px aqua focus ring.
 - Touch targets are at least 44×44px.
 - Tabs follow the WAI-ARIA tab pattern (arrow keys, Home and End).
 - In XR, panels can be grabbed by their frame from either hand, and nothing depends on colour alone.
